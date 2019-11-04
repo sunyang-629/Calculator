@@ -23,28 +23,41 @@ function bindKeyPress(){
         else if (className === "equal"){
             handleEqual();
         }
+        else if (className === "clock"){
+            handleClock();
+        }
         else{
             if(initial.pressEqual){
                 handleClear();
                 if(!initial.operator){
                     initial.lastOperator = null; 
                 }
-                
-                console.log("detective");
             }
             updateDisplay(value);
         }
     })
 }
 
+function handleClock(){
+    var myDate = new Date();
+    var time = myDate.toLocaleTimeString();
+    $( ".calculator-screen" ).val(time);
+    setTimeout(function() {
+        $( ".calculator-screen" ).val(initial.displayNumber);
+      }, 3000);
+}
 
 function updateDisplay(value){
-    if(!isNaN(Number(value)) || (value === "." && !initial.countDecimal)){
+    if(!isNaN(Number(value)) || (value === "." && !initial.countDecimal)){      //(input a number) || (input first dot)
+        if(value === "."){                                                      //input a dot
+            initial.countDecimal++;
+            if(initial.displayNumber == "0"){                            //input a dot when displaying 0
+                initial.displayNumber = "0."
+                return $( ".calculator-screen" ).val(initial.displayNumber);
+            }
+        }
         handleDigit(value);
         $( ".calculator-screen" ).val(initial.displayNumber);
-        if(value === "."){
-            initial.countDecimal++;
-        }
     }
     // console.log(Number($( ".calculator-screen" ).val()),countDecimal)
 }
@@ -53,10 +66,11 @@ function handleDigit(value){
     if(initial.displayNumber == '0'){    //if display is NaN or equal to 0;
         initial.displayNumber = value;
         // console.log(initial.displayNumber);
-    } else if (initial.operator){    
+    }
+    else if (initial.operator){    
         initial.displayNumber = value;        
-        initial.operator = 0;             
-    }                           
+        // initial.operator = 0;             
+    } 
     else{
         initial.displayNumber += value;
     }
