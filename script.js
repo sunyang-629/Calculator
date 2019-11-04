@@ -39,9 +39,15 @@ function bindKeyPress(){
 }
 
 function handleClock(){
-    var myDate = new Date();
-    var time = myDate.toLocaleTimeString();
-    $( ".calculator-screen" ).val(time);
+    var i = 0;
+    for(let i = 0; i < 3; i++){
+        setTimeout(function() {
+            var myDate = new Date();
+            var time = myDate.toLocaleTimeString();
+            $( ".calculator-screen" ).val(time);
+        },i * 1000);
+    }
+
     setTimeout(function() {
         $( ".calculator-screen" ).val(initial.displayNumber);
       }, 3000);
