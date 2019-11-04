@@ -65,17 +65,14 @@ function updateDisplay(value){
         handleDigit(value);
         $( ".calculator-screen" ).val(initial.displayNumber);
     }
-    // console.log(Number($( ".calculator-screen" ).val()),countDecimal)
 }
 
 function handleDigit(value){
     if(initial.displayNumber == '0'){    //if display is NaN or equal to 0;
         initial.displayNumber = value;
-        // console.log(initial.displayNumber);
     }
     else if (initial.operator){    
-        initial.displayNumber = value;        
-        // initial.operator = 0;             
+        initial.displayNumber = value;                   
     } 
     else{
         initial.displayNumber += value;
@@ -113,7 +110,6 @@ function handleOperator(operator){
     initial.lastOperator = operator;
     initial.operator = 1; 
     console.log("operator-out",initial.lastOperator,initial.operator);
-    // console.log("initial.primaryNumber:"+initial.primaryNumber, initial.lastOperator);
 }
 
 function handleEqual(){
@@ -128,7 +124,6 @@ function handleEqual(){
     console.log(primaryNumber,initial.lastOperator,currentNumber,initial.displayNumber);
     initial.pressEqual = 1;      //in order to clear the result when retyping a new number
     calculate(primaryNumber,currentNumber,initial.lastOperator)
-    // console.log(initial.displayNumber);
     initial.displayNumber += "";
     initial.operator = 0;
     $( ".calculator-screen" ).val(initial.displayNumber);
