@@ -1,5 +1,4 @@
 
-
 var initial = {
     countDecimal:0,
     primaryNumber:null,
@@ -7,6 +6,7 @@ var initial = {
     displayNumber:0,
     pressEqual:0,
     lastNumber:0,
+    operator:0,       ///////////////////////////////////in order to check last press whether is a operator
 };
 
 
@@ -26,7 +26,11 @@ function bindKeyPress(){
         else{
             if(initial.pressEqual){
                 handleClear();
-                initial.lastOperator = null; 
+                if(!initial.operator){
+                    initial.lastOperator = null; 
+                }
+                
+                console.log("detective");
             }
             updateDisplay(value);
         }
@@ -48,17 +52,22 @@ function updateDisplay(value){
 function handleDigit(value){
     if(initial.displayNumber == '0'){    //if display is NaN or equal to 0;
         initial.displayNumber = value;
-        console.log(initial.displayNumber);
-    }
+        // console.log(initial.displayNumber);
+    } else if (initial.operator){    
+        initial.displayNumber = value;        
+        initial.operator = 0;             
+    }                           
     else{
         initial.displayNumber += value;
     }
+    initial.operator = 0;
 }
 
 
 function ini(){
     initial.primaryNumber = null;
     initial.lastOperator = null;
+    initial.operator = 0;
     handleClear();
 }
 
@@ -70,22 +79,20 @@ function handleClear(){
 }
 
 function handleOperator(operator){
+    console.log("operator-in",initial.lastOperator,initial.operator);
     if (!initial.lastOperator || initial.pressEqual){ 
         initial.primaryNumber = initial.displayNumber;
-        handleClear();
-        // $( ".calculator-screen" ).val(operator);
-        // initial.lastOperator = operator;
+        initial.countDecimal = 0;    
+        initial.pressEqual = 0;       
     }
-    // if(initial.lastOperator){
-    //     initial.lastOperator = operator;
-    //     handleEqual();
-    //     console.log(initial.lastOperator);
-    // }                                           ////////////////////////////////////
-    // handleClear();
-    // $( ".calculator-screen" ).val(operator);
-    $( ".calculator-screen" ).val(operator);
+    else if(initial.lastOperator && !initial.operator) {
+        console.log("object");
+        handleEqual();
+        initial.primaryNumber = initial.displayNumber;
+    }
     initial.lastOperator = operator;
-    console.log(initial.lastOperator);
+    initial.operator = 1; 
+    console.log("operator-out",initial.lastOperator,initial.operator);
     // console.log("initial.primaryNumber:"+initial.primaryNumber, initial.lastOperator);
 }
 
@@ -103,8 +110,8 @@ function handleEqual(){
     calculate(primaryNumber,currentNumber,initial.lastOperator)
     // console.log(initial.displayNumber);
     initial.displayNumber += "";
+    initial.operator = 0;
     $( ".calculator-screen" ).val(initial.displayNumber);
-    // primaryNumber = initial.displayNumber;
 }
 
 function calculate(primaryNumber,currentNumber,operator){
