@@ -39,18 +39,20 @@ function bindKeyPress(){
 }
 
 function handleClock(){
-    var i = 0;
-    for(let i = 0; i < 3; i++){
-        setTimeout(function() {
+    var timeout = []
+    for(let i = 0; i < 4; i++){
+        timeout.push(setTimeout(function() {
             var myDate = new Date();
             var time = myDate.toLocaleTimeString();
             $( ".calculator-screen" ).val(time);
-        },i * 1000);
+        },i * 1000));
     }
-
+    $( ".calculator-keys" ).click(function(event){
+        timeout.forEach(time => clearTimeout(time));
+     });
     setTimeout(function() {
         $( ".calculator-screen" ).val(initial.displayNumber);
-      }, 3000);
+      }, 4000);
 }
 
 function updateDisplay(value){
@@ -96,20 +98,17 @@ function handleClear(){
 }
 
 function handleOperator(operator){
-    console.log("operator-in",initial.lastOperator,initial.operator);
     if (!initial.lastOperator || initial.pressEqual){ 
         initial.primaryNumber = initial.displayNumber;
         initial.countDecimal = 0;    
         initial.pressEqual = 0;       
     }
     else if(initial.lastOperator && !initial.operator) {
-        console.log("object");
         handleEqual();
         initial.primaryNumber = initial.displayNumber;
     }
     initial.lastOperator = operator;
     initial.operator = 1; 
-    console.log("operator-out",initial.lastOperator,initial.operator);
 }
 
 function handleEqual(){
@@ -121,7 +120,6 @@ function handleEqual(){
         var primaryNumber = parseFloat(initial.displayNumber);
         var currentNumber = parseFloat(initial.lastNumber);
     }
-    console.log(primaryNumber,initial.lastOperator,currentNumber,initial.displayNumber);
     initial.pressEqual = 1;      //in order to clear the result when retyping a new number
     calculate(primaryNumber,currentNumber,initial.lastOperator)
     initial.displayNumber += "";
